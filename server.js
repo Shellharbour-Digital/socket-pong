@@ -23,4 +23,9 @@ io.on('connection', (socket) => {
             io.emit('startGame', socket.id);
         }
     });
+
+    socket.on('paddleMove', (paddleData) => {
+        // Send paddle position to the other player
+        socket.broadcast.emit('paddleMove', paddleData);
+    });
 });
