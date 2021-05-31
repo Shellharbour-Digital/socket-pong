@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
         readyPlayerCount++;
 
         // When 2 players have connected. Start the game!
-        if (readyPlayerCount === 2) {
+        if (readyPlayerCount % 2 === 0) {
             io.emit('startGame', socket.id);
         }
     });
@@ -33,4 +33,9 @@ io.on('connection', (socket) => {
         // Send ball position and score to the other player
         socket.broadcast.emit('ballMove', ballData)
     });
+
+    // Detect disconnects
+    socket.on('disconnect', (reason) => {
+        console.log(`Client: ${socket.id} disconnected: ${reason}`);
+    })
 });
