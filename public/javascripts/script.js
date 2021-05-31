@@ -2,8 +2,8 @@
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
 
-// Connect to the server
-const socket = io();
+// Connect to the server /pong namespace
+const socket = io('/pong');
 
 let isReferee = false;
 let paddleIndex = 0;

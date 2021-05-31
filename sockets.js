@@ -1,7 +1,9 @@
 let readyPlayerCount = 0;
 
 function listen(io) {
-    io.on('connection', (socket) => {
+    const pongNamespace = io.of('/pong');
+    // Only on the pong namespace the server repsonds the following
+    pongNamespace.on('connection', (socket) => {
         // Identify connected players
         console.log('a user connected:', socket.id);
     
@@ -13,7 +15,7 @@ function listen(io) {
     
             // When 2 players have connected. Start the game!
             if (readyPlayerCount % 2 === 0) {
-                io.emit('startGame', socket.id);
+                pongNamespace.emit('startGame', socket.id);
             }
         });
     
