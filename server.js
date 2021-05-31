@@ -28,4 +28,9 @@ io.on('connection', (socket) => {
         // Send paddle position to the other player
         socket.broadcast.emit('paddleMove', paddleData);
     });
+
+    socket.on('ballMove', (ballData) => {
+        // Send ball position and score to the other player
+        socket.broadcast.emit('ballMove', ballData)
+    });
 });

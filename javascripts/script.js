@@ -93,6 +93,11 @@ function ballReset() {
   ballX = width / 2;
   ballY = height / 2;
   speedY = 3;
+  socket.emit('ballMove', {
+    ballX,
+    ballY,
+    score,
+  });
 }
 
 // Adjust Ball Movement
@@ -103,6 +108,11 @@ function ballMove() {
   if (playerMoved) {
     ballX += speedX;
   }
+  socket.emit('ballMove', {
+    ballX,
+    ballY,
+    score,
+  });
 }
 
 // Determine What Ball Bounces Off, Score Points, Reset Ball
@@ -158,9 +168,12 @@ function ballBoundaries() {
 
 // Called Every Frame
 function animate() {
-  ballMove();
+  // Referee Client Is The Truth For Ball Position
+  if (isReferee) {
+    ballMove();
+    ballBoundaries();
+  }
   renderCanvas();
-  ballBoundaries();
   window.requestAnimationFrame(animate);
 }
 
@@ -202,12 +215,16 @@ socket.on('connect', () => {
 });
 
 // Second Player Will Be Assigned The Referee Role.
-// The Referee's Client (Score) Is The Truth
 socket.on('startGame', (refereeId) => {
   console.log('Referee is:', refereeId);
 
   isReferee = socket.id === refereeId;
   startGame();
+});
+
+// The Referee's Client (Score, Ball Position) Is The Truth
+socket.on('ballMove', (ballData) => {
+  ({ ballX, ballY, score } = ballData);
 });
 
 // Update Game State To Reflect Opponent's Client
